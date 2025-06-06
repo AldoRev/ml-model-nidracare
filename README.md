@@ -6,15 +6,15 @@ Predicts sleep disorder class from input features.
 **Request JSON:**
 ```json
 {
-  "user_id": 1,
-  "gender": "male",
-  "age": 25,
-  "sleep_duration": 7.5,
-  "sleep_quality": 8,
-  "physical_activity_duration": 60,
-  "stress_level": 4,
-  "bmi_category": "normal",
-  "steps_per_day": 8000
+    "user_id": 1,
+    "gender": "female",
+    "age": 22,
+    "sleep_duration": 8.0,
+    "physical_activity_duration": 90,
+    "stress_level": 2,
+    "bmi_category": "normal",
+    "steps_per_day": 12000,
+    "sleep_quality": 9
 }
 ```
 
