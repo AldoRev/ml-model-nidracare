@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sleep Disorder Prediction API</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 2em auto; line-height: 1.6; }
+    code, pre { background: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+    h1, h2, h3 { color: #2c3e50; }
+    hr { margin: 2em 0; }
+  </style>
+</head>
+<body>
+  <h1>Sleep Disorder Prediction API</h1>
+  <p>A FastAPI backend serving a TensorFlow model for predicting sleep disorders.</p>
+
+  <h2>🛣️ API Endpoints</h2>
+  <h3>POST <code>https://aldorev-ml-model-nidracare.hf.space/predict</code></h3>
+  <p>Predicts sleep disorder class from input features.</p>
+  <b>Request JSON:</b>
+  <pre>{
+    "user_id": 1,
+    "gender": "female",
+    "age": 22,
+    "sleep_duration": 8.0,
+    "physical_activity_duration": 90,
+    "stress_level": 2,
+    "bmi_category": "normal",
+    "steps_per_day": 12000,
+    "sleep_quality": 9
+}</pre>
+  <b>Response JSON:</b>
+  <pre>{
+  "prediction": [0.1, 0.3, 0.6],
+  "predicted_class": "Insomnia",
+  "confidence": 0.6
+}</pre>
+  <hr>
+  <h3>GET <code>https://aldorev-ml-model-nidracare.hf.space/model/info</code></h3>
+  <p>Returns information about the loaded model.</p>
+  <b>Response:</b>
+  <pre>{
+  "input_shape": [null, 8],
+  "output_shape": [null, 3],
+  "layers": ["dense", "dense_1", "..."]
+}</pre>
+  <hr>
+  <h2>📥 Input Parameters</h2>
+  <ul>
+    <li><b>user_id</b>: User ID (int)</li>
+    <li><b>gender</b>: "male" or "female"</li>
+    <li><b>age</b>: Age (int)</li>
+    <li><b>sleep_duration</b>: Sleep duration in hours (float)</li>
+    <li><b>sleep_quality</b>: Sleep quality (int)</li>
+    <li><b>physical_activity_duration</b>: Physical activity duration in minutes (int)</li>
+    <li><b>stress_level</b>: Stress level (int)</li>
+    <li><b>bmi_category</b>: "normal", "normal weight", "obese", or "overweight"</li>
+    <li><b>steps_per_day</b>: Steps per day (int)</li>
+  </ul>
+  <h2>🏷️ Output Classes</h2>
+  <ul>
+    <li>"Normal"</li>
+    <li>"Sleep Apnea"</li>
+    <li>"Insomnia"</li>
+  </ul>
+  <h2>🗄️ Database</h2>
+  <ul>
+    <li>Uses PostgreSQL (asyncpg) for storing predictions.</li>
+    <li>Tables: <code>users</code>, <code>predictions</code> (see <code>models.py</code>).</li>
+  </ul>
+  <h2>🧩 Model & Scaler Files</h2>
+  <ul>
+    <li><code>sleep_disorder_prediction_model.h5</code> — Keras model file</li>
+    <li><code>scaler.save</code> — Preprocessing scaler (joblib)</li>
+  </ul>
+</body>
+</html>

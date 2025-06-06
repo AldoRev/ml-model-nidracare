@@ -2,7 +2,8 @@ import os
 import json
 import numpy as np
 import tensorflow as tf
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -130,6 +131,11 @@ async def model_info():
         "output_shape": model.output_shape,
         "layers": [layer.name for layer in model.layers]
     }
+
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    with open("index.html", "r", encoding="utf-8") as f:
+        return f.read()
 
 # Create prediction table 
 # if __name__ == "__main__":

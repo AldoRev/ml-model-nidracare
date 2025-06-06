@@ -9,11 +9,11 @@ pinned: false
 
 # Sleep Disorder Prediction API
 
-A FastAPI backend serving a TensorFlow model for predicting sleep disorders...
+A FastAPI backend serving a TensorFlow model for predicting sleep disorders
 
 ## 🛣️ API Endpoints
 
-### `POST /predict`
+### `POST https://aldorev-ml-model-nidracare.hf.space/predict`
 Predicts sleep disorder class from input features.
 
 **Request JSON:**
@@ -42,7 +42,7 @@ Predicts sleep disorder class from input features.
 
 ---
 
-### `GET /model/info`
+### `GET https://aldorev-ml-model-nidracare.hf.space/model/info`
 Returns information about the loaded model.
 
 **Response:**
