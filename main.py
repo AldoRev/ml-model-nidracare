@@ -3,6 +3,7 @@ import json
 import numpy as np
 import tensorflow as tf
 from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -18,6 +19,14 @@ engine = create_async_engine(DATABASE_URL, echo=True, future=True)
 async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can restrict this to specific domains in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+) 
 
 async def get_db():
     async with async_session() as session:
