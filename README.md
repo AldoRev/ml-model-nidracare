@@ -1,83 +1,76 @@
-# Sleep Quality Prediction API
+## 🛣️ API Endpoints
 
-This FastAPI backend serves a TensorFlow.js model for predicting sleep quality based on various health and lifestyle inputs.
+### `POST /predict`
+Predicts sleep disorder class from input features.
 
-## Setup
-
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-2. Place your TensorFlow.js model files in the root directory:
-   - `model.json` (model architecture)
-   - `group1-shard1of1.bin` (model weights)
-
-3. Run the server:
-```bash
-python main.py
-```
-
-The server will start at `http://localhost:8000`
-
-## API Endpoints
-
-### POST /predict
-Predicts sleep quality based on input parameters.
-
-Example request:
+**Request JSON:**
 ```json
 {
-    "age": 25,
-    "gender": 1,
-    "sleep_duration": 7.5,
-    "sleep_quality": 8,
-    "bmi_category": "normal",
-    "stress_level": 4,
-    "physical_activity_duration": 1.5,
-    "steps_per_day": 8000
+  "user_id": 1,
+  "gender": "male",
+  "age": 25,
+  "sleep_duration": 7.5,
+  "sleep_quality": 8,
+  "physical_activity_duration": 60,
+  "stress_level": 4,
+  "bmi_category": "normal",
+  "steps_per_day": 8000
 }
 ```
 
-Example response:
+**Response JSON:**
 ```json
 {
-    "prediction": [0.1, 0.3, 0.6],
-    "predicted_class": "Good",
-    "confidence": 0.6
+  "prediction": [0.1, 0.3, 0.6],
+  "predicted_class": "Insomnia",
+  "confidence": 0.6
 }
 ```
 
-### GET /model/info
+---
+
+### `GET /model/info`
 Returns information about the loaded model.
 
-## Input Parameters
+**Response:**
+```json
+{
+  "input_shape": [null, 8],
+  "output_shape": [null, 3],
+  "layers": ["dense", "dense_1", ...]
+}
+```
 
-- `age`: Age of the person (float)
-- `gender`: Gender (0 for female, 1 for male)
+---
+
+## 📥 Input Parameters
+
+- `user_id`: User ID (int)
+- `gender`: "male" or "female"
+- `age`: Age (int)
 - `sleep_duration`: Sleep duration in hours (float)
-- `sleep_quality`: Sleep quality rating from 1-10 (integer)
-- `bmi_category`: BMI category ("underweight", "normal", or "overweight")
-- `stress_level`: Stress level from 1-10 (integer)
-- `physical_activity_duration`: Physical activity duration in hours (float)
-- `steps_per_day`: Number of steps per day (integer)
+- `sleep_quality`: Sleep quality (int)
+- `physical_activity_duration`: Physical activity duration in minutes (int)
+- `stress_level`: Stress level (int)
+- `bmi_category`: "normal", "normal weight", "obese", or "overweight"
+- `steps_per_day`: Steps per day (int)
 
-## Output Classes
+---
 
-The model predicts one of three sleep quality classes:
-- "Poor"
-- "Average"
-- "Good"
+## 🏷️ Output Classes
 
-## Features
+- `"Normal"`
+- `"Sleep Apnea"`
+- `"Insomnia"`
 
-- RESTful API endpoints for ML model predictions
-- Support for both numeric and image input data
-- CORS enabled for frontend integration
-- Model information endpoint
-- Automatic API documentation with Swagger UI
+## 🗄️ Database
 
-## API Documentation
+- Uses PostgreSQL (asyncpg) for storing predictions.
+- Tables: `users`, `predictions` (see `models.py`).
 
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `
+---
+
+## 🧩 Model & Scaler Files
+
+- `sleep_disorder_prediction_model.h5` — Keras model file
+- `scaler.save` — Preprocessing scaler (joblib)

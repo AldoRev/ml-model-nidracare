@@ -18,12 +18,10 @@ async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession
 
 app = FastAPI()
 
-# Dependency for DB session
 async def get_db():
     async with async_session() as session:
         yield session
 
-# Pydantic input model
 class PredictInput(BaseModel):
     user_id: int
     gender: str
@@ -35,7 +33,7 @@ class PredictInput(BaseModel):
     bmi_category: str
     steps_per_day: int
     
-# --- LOAD MODEL AT STARTUP ---
+# MODEL & SCALER
 model = None
 scaler = None
 
@@ -74,7 +72,6 @@ async def startup_event():
 async def predict(input: PredictInput, db: AsyncSession = Depends(get_db)):
     if model is None or scaler is None:
         raise HTTPException(status_code=500, detail="Model or scaler not loaded")
-    # Preprocess input
     gender_map = {"male": 1, "female": 2}
     bmi_map = {"normal": 0, "normal weight": 1, "obese": 2, "overweight": 3}
     try:
@@ -86,14 +83,14 @@ async def predict(input: PredictInput, db: AsyncSession = Depends(get_db)):
     except KeyError:
         raise HTTPException(status_code=400, detail="Invalid BMI category")
     features = np.array([[
-        gender_val,                          # Gender
-        input.age,                           # Age
-        input.sleep_duration,                # Sleep Duration
-        input.sleep_quality,                 # Quality of Sleep
-        input.physical_activity_duration,    # Physical Activity Level
-        input.stress_level,                  # Stress Level
-        bmi_val,                             # BMI Category
-        input.steps_per_day                  # Daily Steps
+        gender_val,                          
+        input.age,                           
+        input.sleep_duration,                
+        input.sleep_quality,                 
+        input.physical_activity_duration,    
+        input.stress_level,                  
+        bmi_val,                             
+        input.steps_per_day                  
     ]])
     features_scaled = scaler.transform(features)
     pred = model.predict(features_scaled)
@@ -134,7 +131,7 @@ async def model_info():
         "layers": [layer.name for layer in model.layers]
     }
 
-# Utility: create tables (run once, then comment/remove)
+# Create prediction table 
 # if __name__ == "__main__":
 #     import asyncio
 #     async def create_tables():
